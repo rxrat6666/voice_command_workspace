@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS / editor
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
