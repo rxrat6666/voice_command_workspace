@@ -7,7 +7,7 @@ from core.launcher import launch
 
 def main():
     # 1. Проверка безопасности (USB)
-    if not is_allowed_device_connected():
+    if not is_trusted_usb_connected():
         return  # тихо выходим, без логов
 
     # 2. Инициализация компонентов
