@@ -1,4 +1,4 @@
-from core.usb_check import is_allowed_device_connected
+from core.usb_check import is_trusted_usb_connected 
 from core.listener import AudioListener
 from core.recognizer import SpeechRecognizer
 from core.commands import handle_command
