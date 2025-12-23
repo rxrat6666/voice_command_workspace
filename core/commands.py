@@ -1,20 +1,15 @@
-def handle_command(text: str) -> str | None:
-    text =  text.lower()
+from config.commands import COMMANDS
 
-    start_keywords = [
-            "начать",
-            "хочу",
-            "включи"
-    ]
+def handle_command(text: str) -> dict | None:
+    text = text.lower()
 
-    target_keywords = [
-            "работу",
-            "счастья",
-            "систему"
-    ]
-
-    if any(k in text for k in start_keywords) and any(t in text for t in target_keywords):
-        print("WORKSPACE STARTED")
-        return "start_workspace"
+    for cmd in COMMANDS:
+        if any(k in text for k in cmd["start_keywords"]) and \
+           any(t in text for t in cmd["target_keywords"]):
+            return {
+                "action": cmd["action"],
+                "mode": cmd["mode"]
+            }
 
     return None
+

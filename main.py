@@ -1,30 +1,36 @@
-from core.recognizer import listen_until_keywords
+from core.usb_check import is_allowed_device_connected
+from core.listener import AudioListener
+from core.recognizer import SpeechRecognizer
 from core.commands import handle_command
+from core.launcher import launch
+
 
 def main():
-    print("Voice Command Workspace запущен")
+    # 1. Проверка безопасности (USB)
+    if not is_allowed_device_connected():
+        return  # тихо выходим, без логов
 
-    #слушаем любые слова
-    text = listen_until_keywords([
-        "начать",
-        "хочу",
-        "включи",
-        "работу",
-        "счастья",
-        "систему"
-    ])
+    # 2. Инициализация компонентов
+    listener = AudioListener()
+    recognizer = SpeechRecognizer()
 
-    print("Полный текст:", text)
+    # 3. Запуск микрофона
+    with listener.start():
+        while True:
+            audio_data = listener.get_audio()
+            text = recognizer.accept_audio(audio_data)
 
-    command = handle_command(text)
+            if not text:
+                continue
 
-    if command == "start_workspace":
-        print("Запускаем workspace")
-        #позже тут будет запуск приложений
-    else:
-        print("команда не распознана")
+            command = handle_command(text)
+            if not command:
+                continue
 
+            launch(command)
+            break  # один запуск — один workspace
 
 
 if __name__ == "__main__":
     main()
+

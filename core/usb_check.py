@@ -1,26 +1,25 @@
 import subprocess
+from config.usb_devices import TRUSTED_USB_DEVICES
 
-#получаем список устройств
-def get_usb_devices():
+
+def get_usb_devices() -> str:
     result = subprocess.run(
-            ['lsusb'],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
+        ["lsusb"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
     )
     return result.stdout
 
 
-#Вставь ID своего телефона 
-target_device = "04e8:6860"
+def is_trusted_usb_connected() -> bool:
+    usb_output = get_usb_devices()
 
+    for device in TRUSTED_USB_DEVICES:
+        usb_id = f"{device['vendor_id']}:{device['product_id']}"
+        if usb_id in usb_output:
+            print(f"🔐 Доверенное устройство подключено: {device['name']}")
+            return True
 
-#Получаем список устройств
-devices = get_usb_devices()
+    return False
 
-
-#базовая проверка
-if target_device in devices:
-    print(f"телефон {target_device} подключен!")
-else:
-    print("Телефон не найден")
